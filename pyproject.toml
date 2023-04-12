@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "madplan"
+version = "0.1.0"
+description = ""
+authors = ["Emil Tyge <emtyge@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+recipe-scrapers = "^14.36.1"
+babel = "^2.12.1"
+pint = "^0.20.1"
+pandas = "*"
+streamlit = "^1.21.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
