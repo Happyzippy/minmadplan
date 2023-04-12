@@ -32,7 +32,7 @@ if basket:
     combined_basket["amounts"] = combined_basket["amounts"].apply(
         lambda a: " + ".join(map(lambda x: f"{round(x,2):~P}", a))
     )
-    combined_basket["købt"] = combined_basket.item.str.match(".*(oregano|salt|peber|paprika|olivenolie|timian).*") | combined_basket.item.isin({"vand"})
+    combined_basket["købt"] = combined_basket.item.str.match(".*(oregano|paprika|olivenolie|timian).*") | combined_basket.item.isin({"vand", "salt og peber", "salt", "peber"})
     combined_basket.sort_values(["købt", "item"], inplace=True)
     combined_basket.set_index("amounts", drop=True, inplace=True)
 
