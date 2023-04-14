@@ -22,6 +22,7 @@ ureg.define('@alias styk = styk = stk.')
 
 ingredient_blacklist = {"Derudover"}
 
+
 urls = [
     "https://www.valdemarsro.dk/hjemmelavede-burgere/",
     "https://www.valdemarsro.dk/kyllingelasagne-med-spinat/?antal=2",
