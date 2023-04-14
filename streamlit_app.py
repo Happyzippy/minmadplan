@@ -2,18 +2,50 @@ import streamlit as st
 import streamlit_utils as stu
 import pandas as pd
 
-st.header("Menu:")
-url_fields = st.number_input("Dage: ", min_value=1, value=1)
+def set_recipe(i, url):
+    print(i)
+    state.recipes[i] = url
+    
+def timefmt(minutes):
+    hours = minutes//60
+    if hours:
+        minutes = minutes%60
+        if minutes:
+            return f"{hours} {'timer' if hours>1 else 'time'} {minutes}min"
+        else:
+            return f"{hours} {'timer' if hours>1 else 'time'}"
+    else:
+        return f"{minutes}min"
 
-urls = []
-for url_field in range(int(round(url_fields))):
-    url = st.text_input(f"Dag {url_field}", value="", placeholder="https://www.valdemarsro.dk/...", key=f"url_field_{url_field}")
-    urls.append(url)
 
+def build_menu_ui(state):
+    st.header("Menu:")
+    recipe_divs = []
+    urls = []
+    for i, recipe in enumerate(state.recipes):
+        recipe_divs.append(st.container())
+        columns = st.columns([10,1,1])
+        url = columns[0].text_input(f"recipe url", value=recipe, placeholder="https://www.valdemarsro.dk/...", key=f"url_field_{i}", label_visibility="collapsed")
+        columns[1].button("↻", use_container_width=True, key=f"rerun_{i}", on_click=lambda i=i: set_recipe(i, stu.suggest_recipe()))
+        columns[2].button("❌", use_container_width=True, key=f"delete_{i}", on_click=lambda i=i: state.recipes.pop(i))
+        urls.append(url)
+    state.recipes = urls
+    st.button("Tilføj måltid", on_click=lambda: state.recipes.append(stu.suggest_recipe()))
+    return recipe_divs
+
+state = stu.state()
+recipe_divs = build_menu_ui(state)
+
+
+# Build content
 basket = {}
-for url in urls:
-    if url:
-        for ingredient in stu.collect_ingredients(url):
+for div, recipe_url in zip(recipe_divs, state.recipes):
+    if recipe_url:
+        recipe = stu.get_recipe(recipe_url)
+        ingredient_count = len(recipe.ingredients())
+        with div:
+            st.markdown(f"##### {recipe.title()} [{timefmt(recipe.total_time())}] {'' if ingredient_count else '!Ingredients missing!'}")
+        for ingredient in stu.collect_ingredients(recipe_url):
             basket.setdefault(ingredient["item"], []).append(ingredient["amount"])
 
 if basket:

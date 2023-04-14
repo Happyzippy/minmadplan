@@ -23,12 +23,14 @@ def get_unit_registry():
 
 ingredient_blacklist = {"Derudover"}
 
-def collect_ingredients(url, ureg: UnitRegistry = None):
-    scrape = scrape_me(url)
-    language = scrape.language().split("-")[0]
+def get_recipe(url):
+    return scrape_me(url)
+
+def collect_ingredients(recipe, ureg: UnitRegistry = None):
+    language = recipe.language().split("-")[0]
 
     ingredients = []
-    for ingredient in scrape.ingredients():
+    for ingredient in recipe.ingredients():
         if ingredient in ingredient_blacklist:
             continue
 
