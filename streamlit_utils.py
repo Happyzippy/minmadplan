@@ -13,9 +13,9 @@ def get_recipe(url):
 
 
 @st.cache_resource
-def collect_ingredients(url):
+def collect_ingredients(url, servings=None):
     recipe = get_recipe(url)
-    return basket_generator.collect_ingredients(recipe, ureg=get_unit_registry())
+    return basket_generator.collect_ingredients(recipe, servings=servings, ureg=get_unit_registry())
 
 
 @st.cache_resource
@@ -30,9 +30,13 @@ def suggest_recipe():
 @dataclass
 class State:
     recipes: List[str]
+    servings: int
 
 
 def state():
     if 'session_state_object' not in st.session_state:
-        st.session_state['session_state_object'] = State(recipes=[suggest_recipe()])
+        st.session_state['session_state_object'] = State(
+            recipes=[suggest_recipe()],
+            servings=4,
+        )
     return st.session_state['session_state_object']

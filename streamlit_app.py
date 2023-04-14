@@ -20,6 +20,7 @@ def timefmt(minutes):
 
 def build_menu_ui(state):
     st.header("Menu:")
+    state.servings = st.number_input("Kuverter:", min_value=1.0, value=2.5, step=0.5)
     recipe_divs = []
     urls = []
     for i, recipe in enumerate(state.recipes):
@@ -44,8 +45,10 @@ for div, recipe_url in zip(recipe_divs, state.recipes):
         recipe = stu.get_recipe(recipe_url)
         ingredient_count = len(recipe.ingredients())
         with div:
-            st.markdown(f"##### {recipe.title()} [{timefmt(recipe.total_time())}] {'' if ingredient_count else '!Ingredients missing!'}")
-        for ingredient in stu.collect_ingredients(recipe_url):
+            columns = st.columns([10,2])
+            columns[0].markdown(f"#### [{recipe.title()}]({recipe_url}) [{timefmt(recipe.total_time())}] {'' if ingredient_count else '!Ingredients missing!'}")
+            columns[1].markdown(f'<img src="{recipe.image()}" width="100%" style="padding: 8px 0px 8px 0px;" />', unsafe_allow_html=True)
+        for ingredient in stu.collect_ingredients(recipe_url, servings=state.servings):
             basket.setdefault(ingredient["item"], []).append(ingredient["amount"])
 
 if basket:

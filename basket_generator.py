@@ -19,6 +19,7 @@ def get_unit_registry():
     ureg.define('@alias teske = teskefulde = tsk')
     ureg.define('styk = count = stk')
     ureg.define('@alias styk = styk = stk.')
+    ureg.define('person = 1 = pers')
     return ureg
 
 ingredient_blacklist = {"Derudover"}
@@ -26,8 +27,12 @@ ingredient_blacklist = {"Derudover"}
 def get_recipe(url):
     return scrape_me(url)
 
-def collect_ingredients(recipe, ureg: UnitRegistry = None):
+def collect_ingredients(recipe, servings=None, ureg: UnitRegistry = None):
     language = recipe.language().split("-")[0]
+    if servings is not None:
+        multiplier = servings / ureg(recipe.yields()).m
+    else:
+        multiplier = 1
 
     ingredients = []
     for ingredient in recipe.ingredients():
@@ -37,7 +42,7 @@ def collect_ingredients(recipe, ureg: UnitRegistry = None):
         items = ingredient.strip().split(" ", 2)
         
         try:
-            amount = float(parse_decimal(items[0], locale=language))
+            amount = multiplier * float(parse_decimal(items[0], locale=language))
             try:
                 amount = amount * ureg(items[1])
                 item = items[2]

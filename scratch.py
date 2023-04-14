@@ -19,6 +19,7 @@ ureg.define('@alias håndfuld = håndfulde = håndfulde')
 ureg.define('@alias teske = teskefulde = tsk')
 ureg.define('styk = count = stk')
 ureg.define('@alias styk = styk = stk.')
+ureg.define('person = 1 = pers')
 
 ingredient_blacklist = {"Derudover"}
 
