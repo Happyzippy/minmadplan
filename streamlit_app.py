@@ -3,7 +3,6 @@ import streamlit_utils as stu
 import pandas as pd
 
 def set_recipe(i, url):
-    print(i)
     state.recipes[i] = url
     
 def timefmt(minutes):

@@ -13,9 +13,9 @@ def get_recipe(url):
 
 
 @st.cache_resource
-def collect_ingredients(url, servings=None):
+def collect_ingredients(url, **kwargs):
     recipe = get_recipe(url)
-    return basket_generator.collect_ingredients(recipe, servings=servings, ureg=get_unit_registry())
+    return basket_generator.collect_ingredients(recipe, ureg=get_unit_registry(), **kwargs)
 
 
 @st.cache_resource
